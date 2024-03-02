@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Nodejs backend server for the library management system",
+  "main": "dist/server.js",
+  "type": "module",
+  "scripts": {
+	"start": "npm run start:dev",
+	"start:dev":"nodemon --config nodemon.json",
+	"start:prod":"npm run build && node dist/server.js",
+	"build":"rimraf ./dist && tsc",
+	"lint":"eslint src/",
+	"lint:fix":"eslint src/ --fix",
+	"api-test":"mocha",
+	"test": "DATABASE_NAME='testLibrary' PORT=5200 start-test start:prod http://127.0.0.1:5200 api-test"
+  },
+  "author": "IM Ndango",
+  "license": "ISC"
+}
