@@ -21,6 +21,7 @@ yarn-error.log
 
 # Visual Studio Code
 .vscode/*
+.vscode
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -30,3 +31,8 @@ yarn-error.log
 # System files
 .DS_Store
 Thumbs.db
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env
