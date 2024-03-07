@@ -59,3 +59,34 @@ reviews.post("/", protectedRoute, async (req: AuthRequest, res) => {
       .send({ message: reviewsController.errors.UNKNOWN_ERROR });
   }
 });
+
+reviews.get("/:reviewId", async (req: AuthRequest, res) => {
+  const bookId = req?.params?.bookId;
+  const reviewId = req?.params?.reviewId;
+
+  if (!bookId) {
+    return res
+      .status(400)
+      .send({ message: bookController.errors.BOOK_ID_MISSING });
+  }
+
+  if (!reviewId) {
+    return res
+      .status(400)
+      .send({ message: reviewsController.errors.REVIEW_ID_MISSING });
+  }
+
+  try {
+    const review = await reviewsController.getReview(bookId, reviewId);
+    if (review) {
+      return res.json(review);
+    }
+    return res
+      .status(404)
+      .send({ message: reviewsController.errors.NOT_FOUND });
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ message: reviewsController.errors.UNKNOWN_ERROR });
+  }
+});
