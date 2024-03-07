@@ -1,7 +1,6 @@
 import { Router } from "express";
 import jsonwebtoken from "jsonwebtoken";
-import UserController from "../controllers/user";
-import { collections } from "../database";
+import UserController from "../controllers/user.js";
 
 const userController = new UserController();
 
