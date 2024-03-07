@@ -30,3 +30,32 @@ reviews.get("/", async (req: AuthRequest, res) => {
       .send({ message: reviewsController.errors.UNKNOWN_ERROR });
   }
 });
+
+reviews.post("/", protectedRoute, async (req: AuthRequest, res) => {
+  const bookId = req?.params?.bookId;
+  const reviewBody = req?.body;
+  const userName = req?.auth?.name;
+
+  if (!bookId) {
+    return res
+      .status(400)
+      .send({ message: bookController.errors.BOOK_ID_MISSING });
+  }
+
+  try {
+    const { insertResult, updateResult } = await reviewsController.createReview(
+      bookId,
+      reviewBody,
+      userName
+    );
+    return res.status(201).send({
+      message: reviewsController.success.CREATED,
+      insertResult,
+      updateResult,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ message: reviewsController.errors.UNKNOWN_ERROR });
+  }
+});
