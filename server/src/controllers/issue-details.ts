@@ -29,4 +29,52 @@ class ReservationController {
     INVALID_USER_ID: "Invalid user id",
     INVALID_BOOK_ID: "Invalid book id",
   };
+  success = {
+    CREATED: "Reservation created",
+    CANCELLED: "Reservation cancelled",
+  };
+
+  RESERVATION_DURATION = 0.5; //0.5 days -> 12 hours
+  BORROWED_DURATION = 21; // days
+
+  private async gePagedIssueDetails(
+    type: IssueDetailType,
+    limit = 50,
+    skip = 0
+  ) {
+    const filter = {
+      recordType:
+        type === IssueDetailType.BorrowedBook ? "borrowedBook" : "reservation",
+    };
+
+    const sortField =
+      type === IssueDetailType.BorrowedBook ? "borrowDate" : "expirationDate";
+
+    const aggregationResult = await collections?.issueDetail
+      ?.aggregate([
+        {
+          $match: filter,
+        },
+        {
+          $facet: {
+            metadata: [{ $count: "totalCount" }],
+            data: [
+              { $sort: { [sortField]: -1 } },
+              { $skip: skip },
+              { $limit: limit },
+            ],
+          },
+        },
+      ])
+      .toArray();
+
+    if (!aggregationResult || aggregationResult.length === 0) {
+      return [];
+    } else {
+      return {
+        data: aggregationResult[0]?.data,
+        totalCount: aggregationResult[0]?.metadata[0]?.totalCount,
+      };
+    }
+  }
 }
