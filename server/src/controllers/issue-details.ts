@@ -92,4 +92,15 @@ class ReservationController {
       .toArray();
     return issueDetails;
   }
+
+  private getDueDate(type: string) {
+    const now = Date.now();
+    const daysInMs = 1000 * 60 * 60 * 24;
+    const duration =
+      type === IssueDetailType.Reservation
+        ? this.RESERVATION_DURATION
+        : this.BORROWED_DURATION;
+    const dueDate = new Date(now + daysInMs * duration);
+    return new Date(dueDate);
+  }
 }
