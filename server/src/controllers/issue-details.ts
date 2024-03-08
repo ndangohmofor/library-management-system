@@ -77,4 +77,19 @@ class ReservationController {
       };
     }
   }
+
+  private async getIssueDetailForUser(userId: string, type: IssueDetailType) {
+    const filter = {
+      _id: new RegExp(`^${userId}${type}`),
+    };
+
+    if (type === IssueDetailType.BorrowedBook) {
+      filter["returned"] = false;
+    }
+
+    const issueDetails = await collections?.issueDetails
+      ?.find(filter)
+      .toArray();
+    return issueDetails;
+  }
 }
