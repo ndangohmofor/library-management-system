@@ -37,7 +37,7 @@ class ReservationController {
   RESERVATION_DURATION = 0.5; //0.5 days -> 12 hours
   BORROWED_DURATION = 21; // days
 
-  private async gePagedIssueDetails(
+  private async getPagedIssueDetails(
     type: IssueDetailType,
     limit = 50,
     skip = 0
