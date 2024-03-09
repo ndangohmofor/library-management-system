@@ -146,4 +146,25 @@ class ReservationController {
 
     return reservation;
   }
+
+  public async createReservation(user: ReservationUser, bookId: string) {
+    const bookData = await bookController.isBookAvailable(bookId);
+    const book = {
+      _id: bookData?._id,
+      title: bookData?.title,
+    } as ReservationBook;
+    const userId = user._id.toString();
+
+    const reservation = {
+      _id: this.getReservationId(book._id, userId),
+      book,
+      user,
+      recordType: "reservation",
+      expirationDate: this.getDueDate(IssueDetailType.Reservation),
+    } as Reservation;
+
+    const result = await collections?.issueDetails?.insertOne(reservation);
+    await bookController.decrementBookInventory(book._id);
+    return result;
+  }
 }
