@@ -250,4 +250,8 @@ class ReservationController {
     }
     return upsertResult;
   }
+
+  public async getBorrows(userId: string) {
+    return this.getIssueDetailForUser(userId, IssueDetailType.BorrowedBook);
+  }
 }
