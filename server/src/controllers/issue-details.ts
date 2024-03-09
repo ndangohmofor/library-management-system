@@ -107,4 +107,8 @@ class ReservationController {
   private getIssueDetailsId(bookId: string, userId: string, type: string) {
     return `${userId}${type}${bookId}`;
   }
+
+  private getReservationId(bookId: string, userId: string) {
+    return this.getIssueDetailsId(bookId, userId, IssueDetailType.Reservation);
+  }
 }
