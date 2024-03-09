@@ -111,4 +111,8 @@ class ReservationController {
   private getReservationId(bookId: string, userId: string) {
     return this.getIssueDetailsId(bookId, userId, IssueDetailType.Reservation);
   }
+
+  private getBorrowedBookId(bookId: string, userId: string) {
+    return this.getIssueDetailsId(bookId, userId, IssueDetailType.BorrowedBook);
+  }
 }
