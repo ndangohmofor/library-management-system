@@ -119,4 +119,12 @@ class ReservationController {
   public async getReservations(userId: string) {
     return this.getIssueDetailForUser(userId, IssueDetailType.Reservation);
   }
+
+  public async getReservation(reservationId: string) {
+    const reservation = await collections?.issueDetails?.findOne({
+      _id: reservationId,
+    });
+    if (!reservation) throw new Error(this.errors.NOT_FOUND);
+    return reservation;
+  }
 }
