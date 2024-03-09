@@ -167,4 +167,16 @@ class ReservationController {
     await bookController.decrementBookInventory(book._id);
     return result;
   }
+
+  public async cancelReservation(bookId: string, userId: string) {
+    const reservationId = this.getReservationId(bookId, userId);
+    const deleteResult = await collections?.issueDetails?.deleteOne({
+      _id: reservationId,
+    });
+
+    if (deleteResult.deletedCount === 0) throw new Error(this.errors.NOT_FOUND);
+
+    await bookController.incrementBookInventory(bookId);
+    return deleteResult;
+  }
 }
