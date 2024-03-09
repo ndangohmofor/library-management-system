@@ -138,4 +138,12 @@ class ReservationController {
     }
     return this.getPagedIssueDetails(IssueDetailType.Reservation, limit, skip);
   }
+
+  public async getBookReservationByUser(bookId: string, userId: string) {
+    const reservation = await collections?.issueDetails?.findOne({
+      _id: this.getReservationId(bookId, userId),
+    });
+
+    return reservation;
+  }
 }
