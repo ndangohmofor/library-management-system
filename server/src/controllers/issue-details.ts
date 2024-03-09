@@ -115,4 +115,8 @@ class ReservationController {
   private getBorrowedBookId(bookId: string, userId: string) {
     return this.getIssueDetailsId(bookId, userId, IssueDetailType.BorrowedBook);
   }
+
+  public async getReservations(userId: string) {
+    return this.getIssueDetailForUser(userId, IssueDetailType.Reservation);
+  }
 }
