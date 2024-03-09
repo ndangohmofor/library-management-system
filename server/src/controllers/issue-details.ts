@@ -127,4 +127,15 @@ class ReservationController {
     if (!reservation) throw new Error(this.errors.NOT_FOUND);
     return reservation;
   }
+
+  public async getPagedReservations(limit = 50, skip = 0) {
+    if (limit > 100) {
+      limit = 100;
+    }
+
+    if (skip < 0) {
+      skip = 0;
+    }
+    return this.getPagedIssueDetails(IssueDetailType.Reservation, limit, skip);
+  }
 }
