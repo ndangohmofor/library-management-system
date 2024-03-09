@@ -254,4 +254,16 @@ class ReservationController {
   public async getBorrows(userId: string) {
     return this.getIssueDetailForUser(userId, IssueDetailType.BorrowedBook);
   }
+
+  public async getPagedBorrows(limit = 50, skip = 0) {
+    if (limit > 100) {
+      limit = 100;
+    }
+
+    if (skip < 0) {
+      skip = 0;
+    }
+
+    return this.getPagedIssueDetails(IssueDetailType.BorrowedBook, limit, skip);
+  }
 }
