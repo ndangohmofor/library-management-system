@@ -6,7 +6,7 @@ import { ObjectId } from "mongodb";
  * IssueDetail follows the single-collection pattern.
  * See https://www.mongodb.com/blog/post/building-with-patterns-the-single-collection-pattern.
  */
-export type issueDetail = BorrowedBook | Reservation;
+export type IssueDetail = BorrowedBook | Reservation;
 
 interface ReservationUser {
   _id: ObjectId;
