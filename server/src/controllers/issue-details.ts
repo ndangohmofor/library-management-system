@@ -2,7 +2,7 @@ import { UpdateResult } from "mongodb";
 import { collections } from "../database";
 import {
   BorrowedBook,
-  issueDetail,
+  IssueDetail,
   IssueDetailType,
   Reservation,
   ReservationBook,
@@ -178,5 +178,76 @@ class ReservationController {
 
     await bookController.incrementBookInventory(bookId);
     return deleteResult;
+  }
+
+  public async borrowBook(bookId: string, userId: string) {
+    let bookData: Book | null;
+    try {
+      bookData = await bookController.getBook(bookId);
+    } catch (e) {
+      console.error(e);
+      throw new Error(this.errors.INVALID_BOOK_ID);
+    }
+
+    if (!bookData) {
+      console.error(`Book with id ${bookId} not found`);
+      throw new Error(this.errors.INVALID_BOOK_ID);
+    }
+
+    const book = {
+      _id: bookData._id,
+      title: bookData.title,
+    } as ReservationBook;
+
+    let userData: User | null;
+    try {
+      userData: await userController.getUserById(userId);
+    } catch (e) {
+      console.error(e);
+      throw new Error(this.errors.INVALID_USER_ID);
+    }
+
+    if (!userData) {
+      console.error(`User with id ${userId} not found`);
+      throw new Error(this.errors.INVALID_USER_ID);
+    }
+
+    const user = {
+      _id: userData._id,
+      name: userData.name,
+    } as ReservationUser;
+
+    const borrow = {
+      _id: this.getBorrowedBookId(book._id, userId),
+      book,
+      user,
+      recordType: "borrowedBook",
+      borrowDate: new Date(Date.now()),
+      dueDate: this.getDueDate(IssueDetailType.BorrowedBook),
+      returned: false,
+    } as BorrowedBook;
+
+    let upsertResult: UpdateResult<IssueDetail>;
+    try {
+      upsertResult = await collections?.issueDetails?.updateOne(
+        { _id: borrow._id },
+        { $set: borrow },
+        { upsert: true }
+      );
+    } catch (e) {
+      throw new Error(e.message);
+    }
+
+    //Delete matching reservation if one then re-compute computed fields
+    const reservationId = this.getReservationId(bookId, userId);
+    const deleteResult = await collections?.issueDetails?.deleteOne({
+      _id: reservationId,
+    });
+    const borrowReplacesReservation = deleteResult.deletedCount === 1;
+    const borrowIsRenewal = upsertResult.modifiedCount === 1;
+    if (!borrowReplacesReservation && !borrowIsRenewal) {
+      await bookController.decrementBookInventory(book._id);
+    }
+    return upsertResult;
   }
 }
