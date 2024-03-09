@@ -103,4 +103,8 @@ class ReservationController {
     const dueDate = new Date(now + daysInMs * duration);
     return new Date(dueDate);
   }
+
+  private getIssueDetailsId(bookId: string, userId: string, type: string) {
+    return `${userId}${type}${bookId}`;
+  }
 }
