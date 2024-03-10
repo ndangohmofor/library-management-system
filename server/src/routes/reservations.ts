@@ -70,3 +70,31 @@ reservations.get("/:reservationId", async (req, res) => {
     return res.status(500).send({ message: e });
   }
 });
+
+reservations.post("/:bookId", protectedRoute, async (req: AuthRequest, res) => {
+  const username = req?.auth?.name;
+  const bookId = req?.params?.bookId;
+
+  if (!username || !bookId) {
+    return res.send({ message: issueDetailsController.errors.MISSING_DETAILS });
+  }
+  const user = {
+    _id: new ObjectId(req?.auth?.sub),
+    name: username,
+  };
+  try {
+    const result = await issueDetailsController.createReservation(user, bookId);
+    return res.status(201).send({
+      message: issueDetailsController.success.CREATED,
+      insertedId: result.insertedId,
+    });
+  } catch (e) {
+    if (e.message == bookController.errors.NOT_FOUND)
+      return res.status(404).send({ message: e.message });
+    if (e.message == bookController.errors.NOT_AVAILABLE)
+      return res
+        .status(400)
+        .send({ message: bookController.errors.NOT_AVAILABLE });
+    return res.status(500).send({ message: e });
+  }
+});
