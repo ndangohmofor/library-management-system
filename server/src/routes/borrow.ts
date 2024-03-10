@@ -59,3 +59,26 @@ borrows.post(
     }
   }
 );
+
+borrows.post(
+  "/:bookId/:userId",
+  protectedRoute,
+  adminRoute,
+  async (req: AuthRequest, res) => {
+    const bookId = req?.params?.bookId;
+    const userId = req?.params?.userId;
+
+    try {
+      const result = await issueDetailsController.borrowBook(bookId, userId);
+      return res.status(201).json(result);
+    } catch (err) {
+      if (err.message == bookController.errors.NOT_FOUND)
+        return res.status(404).json({ message: err.message });
+      if (err.message == bookController.errors.NOT_AVAILABLE)
+        return res.status(400).json({ message: err.message });
+      if (err.message == issueDetailsController.errors.ALREADY_BOOKED)
+        return res.status(400).json({ message: err.message });
+      return res.status(500).json({ message: err.message });
+    }
+  }
+);
