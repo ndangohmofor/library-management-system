@@ -37,3 +37,25 @@ borrows.get(
     return res.status(200).json(borrowedBooks);
   }
 );
+
+borrows.post(
+  "/:bookId/:userId/return",
+  protectedRoute,
+  adminRoute,
+  async (req: AuthRequest, res) => {
+    const userId = req?.params?.userId;
+    const bookId = req?.params.bookId;
+
+    if (!userId || !bookId) {
+      return res
+        .status(400)
+        .json({ message: issueDetailsController.errors.MISSING_DETAILS });
+    }
+    try {
+      const result = await issueDetailsController.returnBook(userId, bookId);
+      return res.status(200).json(result);
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  }
+);
