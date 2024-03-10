@@ -266,4 +266,25 @@ class ReservationController {
 
     return this.getPagedIssueDetails(IssueDetailType.BorrowedBook, limit, skip);
   }
+
+  public async returnBook(userId: string, bookId: string) {
+    const borrowId = this.getBorrowedBookId(bookId, userId);
+    const borrow = (await collections?.issueDetails?.findOne({
+      _id: borrowId,
+    })) as BorrowedBook;
+
+    if (!borrow) {
+      console.error(this.errors.ALREADY_RETURNED);
+      throw new Error(this.errors.ALREADY_RETURNED);
+    }
+
+    const result = await collections?.issueDetails?.updateOne(
+      { _id: borrowId },
+      {
+        $set: { returned: true, returnedDate: new Date() },
+      }
+    );
+    await bookController.incrementBookInventory(bookId);
+    return result;
+  }
 }
