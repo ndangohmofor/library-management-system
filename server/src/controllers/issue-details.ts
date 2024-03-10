@@ -17,7 +17,7 @@ import { Book } from "../models/book";
 const bookController = new BookController();
 const userController = new UserController();
 
-class ReservationController {
+class ReservationsController {
   errors = {
     MISSING_ID: "Reservation id is missing",
     MISSING_DETAILS: "Reservation details are missing",
@@ -298,3 +298,5 @@ class ReservationController {
     return borrowedBooks;
   }
 }
+
+export default ReservationsController;
