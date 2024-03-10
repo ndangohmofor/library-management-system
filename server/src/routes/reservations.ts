@@ -48,3 +48,25 @@ reservations.get(
     return res.status(200).json(reservations);
   }
 );
+
+reservations.get("/:reservationId", async (req, res) => {
+  const reservationId = req?.params?.reservationId;
+  if (!reservationId) {
+    return res
+      .status(404)
+      .send({ message: issueDetailsController.errors.MISSING_ID });
+  }
+  try {
+    const reservation = await issueDetailsController.getReservation(
+      reservationId
+    );
+    return res.status(200).send(reservation);
+  } catch (e) {
+    if (e.message === issueDetailsController.errors.NOT_FOUND) {
+      return res
+        .status(404)
+        .send({ message: issueDetailsController.errors.NOT_FOUND });
+    }
+    return res.status(500).send({ message: e });
+  }
+});
