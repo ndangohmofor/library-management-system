@@ -31,3 +31,20 @@ reservations.get("/", protectedRoute, async (req: AuthRequest, res) => {
   const reservations = await issueDetailsController.getReservations(userId);
   return res.status(200).json(reservations);
 });
+
+reservations.get(
+  "/page",
+  protectedRoute,
+  adminRoute,
+  async (req: AuthRequest, res) => {
+    const limit = parseInt(req?.query?.limit as string) || undefined;
+    const skip = parseInt(req?.query?.skip as string) || undefined;
+
+    const reservations = await issueDetailsController.getPagedReservations(
+      limit,
+      skip
+    );
+
+    return res.status(200).json(reservations);
+  }
+);
