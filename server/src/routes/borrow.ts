@@ -93,3 +93,14 @@ borrows.get("/", protectedRoute, async (req: AuthRequest, res) => {
     return res.status(500).json({ message: err.message });
   }
 });
+
+borrows.get("/history", protectedRoute, async (req: AuthRequest, res) => {
+  const userId = req?.auth?.sub;
+
+  try {
+    const result = await issueDetailsController.getBorrowedHistory(userId);
+    return res.status(200).json(result);
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+});
