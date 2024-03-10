@@ -4,7 +4,6 @@ import { protectedRoute, adminRoute } from "../utils/middlewares";
 import { Request as AuthRequest } from "express-jwt";
 import IssueDetailsController from "../controllers/issue-details";
 import BookController from "../controllers/books";
-import { collections } from "../database";
 
 //The router will be added as middleware and will take control of requests starting with /reservations.
 const reservations = Router({ mergeParams: true });
@@ -98,3 +97,32 @@ reservations.post("/:bookId", protectedRoute, async (req: AuthRequest, res) => {
     return res.status(500).send({ message: e });
   }
 });
+
+reservations.delete(
+  "/:bookId",
+  protectedRoute,
+  async (req: AuthRequest, res) => {
+    const userId = req?.auth?.sub;
+    const bookId = req?.params?.bookId;
+
+    if (!userId || !bookId) {
+      return res
+        .send({ message: issueDetailsController.errors.MISSING_DETAILS })
+        .status(400);
+    }
+
+    try {
+      await issueDetailsController.cancelReservation(bookId, userId);
+      res
+        .status(200)
+        .send({ message: issueDetailsController.success.CANCELLED });
+    } catch (e) {
+      if (e === issueDetailsController.errors.NOT_FOUND) {
+        return res
+          .status(404)
+          .send({ message: issueDetailsController.errors.NOT_FOUND });
+      }
+      return res.status(500).send({ message: e });
+    }
+  }
+);
