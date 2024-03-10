@@ -28,6 +28,14 @@ app.use(
 app.use("/reservations", (await import("./routes/reservations.js")).default);
 app.use("/borrow", (await import("./routes/borrow.js")).default);
 
+app.use(function (err, req, res, next) {
+  if (err.name === "UnauthorizedError") {
+    res.status(401).send({ message: "Invalid Token" });
+  } else {
+    next(err);
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
