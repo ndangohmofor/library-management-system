@@ -126,3 +126,20 @@ reservations.delete(
     }
   }
 );
+
+reservations.get(
+  "/user/:userId",
+  protectedRoute,
+  adminRoute,
+  async (req: AuthRequest, res) => {
+    const userId = req?.params?.userId;
+
+    if (!userId) {
+      return res
+        .status(400)
+        .send({ message: issueDetailsController.errors.MISSING_DETAILS });
+    }
+    const reservations = await issueDetailsController.getReservations(userId);
+    return res.status(200).json(reservations);
+  }
+);
