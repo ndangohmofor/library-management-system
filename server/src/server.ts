@@ -26,6 +26,7 @@ app.use(
   (await import("./routes/reviews.js")).default
 );
 app.use("/reservations", (await import("./routes/reservations.js")).default);
+app.use("/borrow", (await import("./routes/borrow.js")).default);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
