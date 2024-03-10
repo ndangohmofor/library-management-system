@@ -287,4 +287,14 @@ class ReservationController {
     await bookController.incrementBookInventory(bookId);
     return result;
   }
+
+  public async getBorrowedHistory(userId: string) {
+    const borrowedBooks = await collections?.issueDetails
+      ?.find({
+        _id: new RegExp(`^${userId}B`),
+        returned: true,
+      })
+      .toArray();
+    return borrowedBooks;
+  }
 }
