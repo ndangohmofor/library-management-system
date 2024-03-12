@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { Request as AuthRequest } from "express-jwt";
-import { protectedRoute } from "../utils/middlewares";
-import BookController from "../controllers/books";
-import ReviewsController from "../controllers/reviews";
+import { protectedRoute } from "../utils/middlewares.js";
+import BookController from "../controllers/books.js";
+import ReviewsController from "../controllers/reviews.js";
 
 //The router will be added as a middleware and will take control of requests starting with /books/:bookId/reviews.
 const reviews = Router({ mergeParams: true });
