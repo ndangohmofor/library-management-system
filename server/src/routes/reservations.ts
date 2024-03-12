@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { ObjectId } from "mongodb";
-import { protectedRoute, adminRoute } from "../utils/middlewares";
+import { protectedRoute, adminRoute } from "../utils/middlewares.js";
 import { Request as AuthRequest } from "express-jwt";
-import IssueDetailsController from "../controllers/issue-details";
-import BookController from "../controllers/books";
+import IssueDetailsController from "../controllers/issue-details.js";
+import BookController from "../controllers/books.js";
 
 //The router will be added as middleware and will take control of requests starting with /reservations.
 const reservations = Router({ mergeParams: true });
