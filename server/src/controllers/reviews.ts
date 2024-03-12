@@ -1,5 +1,5 @@
-import { collections } from "../database";
-import { Review } from "../models/review";
+import { collections } from "../database.js";
+import { Review } from "../models/review.js";
 import { ObjectId, InsertOneResult, UpdateResult } from "mongodb";
 
 class ReviewsController {
