@@ -1,5 +1,5 @@
 import { UpdateResult } from "mongodb";
-import { collections } from "../database";
+import { collections } from "../database.js";
 import {
   BorrowedBook,
   IssueDetail,
@@ -7,12 +7,12 @@ import {
   Reservation,
   ReservationBook,
   ReservationUser,
-} from "../models/issue-details";
+} from "../models/issue-details.js";
 
-import BookController from "./books";
-import UserController from "./user";
-import { User } from "../models/user";
-import { Book } from "../models/book";
+import BookController from "./books.js";
+import UserController from "./user.js";
+import { User } from "../models/user.js";
+import { Book } from "../models/book.js";
 
 const bookController = new BookController();
 const userController = new UserController();
